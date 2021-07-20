@@ -6,9 +6,6 @@ from .dummy import Dummy_driver
 from ipi.utils.mathtools import det_ut3x3
 from ipi.utils.units import unit_to_internal, unit_to_user
 
-import numpy as np
-from scipy.interpolate import trapezoid
-
 try:
     from rascal.models.genericmd import FiniteTCalculator as RascalCalc
 except:
@@ -55,8 +52,6 @@ class Finite_T_driver(Dummy_driver):
         """Get energies, forces, and stresses from the librascal model"""
         pos_rascal = unit_to_user("length", "angstrom", pos)
         cell_rascal = unit_to_user("length", "angstrom", cell)
-        # Prepare the weights and override the base calculator
-        weights_band_T = trapezoid()
         # Do the actual calculation
         pot, force, stress = self.base_calc.calculate(pos_rascal, cell_rascal)
         pot_ipi = unit_to_internal("energy", "electronvolt", pot)
