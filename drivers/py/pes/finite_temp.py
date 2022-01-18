@@ -23,7 +23,7 @@ class Finite_T_driver(Dummy_driver):
                             a template file that describes the chemical makeup of the structure,
                             and the DOS regression wights. 
                             Example: 
-                            python driver.py -m rascal -u -o model.json,template.xyz,xdos.npy,temperature"""
+                            python driver.py -m rascal -u -o model.json,template.xyz,xdos.npy,temperature,is_volume,nelectrons"""
 
         super().__init__(args)
 
@@ -38,22 +38,23 @@ class Finite_T_driver(Dummy_driver):
         except ValueError:
             sys.exit(self.error_msg)
 
-        if len(arglist) == 4:
+        if len(arglist) == 5:
             self.model = arglist[0]
             self.template = arglist[1]
             self.xdos = arglist[2]
             self.temperature = arglist[3]
+            self.nelectrons = arglist[4] 
         else:
             sys.exit(self.error_msg)
 
-        self.base_calc = RascalCalc(self.model, True, self.template, self.xdos, self.temperature)
+        self.base_calc = RascalCalc(self.model, True, self.xdos, self.temperature, self.template, False, self.nelectrons)
 
     def __call__(self, cell, pos):
         """Get energies, forces, and stresses from the librascal model"""
         pos_rascal = unit_to_user("length", "angstrom", pos)
         cell_rascal = unit_to_user("length", "angstrom", cell)
         # Do the actual calculation
-        pot, force, stress = self.base_calc.calculate(pos_rascal, cell_rascal)
+        pot, force, stress, extras = self.base_calc.calculate(pos_rascal, cell_rascal)
         pot_ipi = unit_to_internal("energy", "electronvolt", pot)
         force_ipi = unit_to_internal("force", "ev/ang", force)
         # The rascal stress is normalized by the cell volume (in rascal units)
