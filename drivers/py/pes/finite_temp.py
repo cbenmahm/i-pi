@@ -47,7 +47,7 @@ class Finite_T_driver(Dummy_driver):
         else:
             sys.exit(self.error_msg)
 
-        self.base_calc = RascalCalc(self.model, True, self.xdos, self.temperature, self.template, False, self.nelectrons)
+        self.base_calc = RascalCalc(self.model, True, self.xdos, self.temperature, self.template, self.nelectrons)
 
     def __call__(self, cell, pos):
         """Get energies, forces, and stresses from the librascal model"""
