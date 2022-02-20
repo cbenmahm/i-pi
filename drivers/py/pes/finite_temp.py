@@ -23,7 +23,7 @@ class Finite_T_driver(Dummy_driver):
                             a template file that describes the chemical makeup of the structure,
                             and the DOS regression wights. 
                             Example: 
-                            python driver.py -m rascal -u -o model.json,template.xyz,xdos.npy,temperature,is_volume,nelectrons"""
+                            python driver.py -m rascal -u -o model.json,template.xyz,xdos.npy,temperature,nelectrons,contribution"""
 
         super().__init__(args)
 
@@ -38,16 +38,17 @@ class Finite_T_driver(Dummy_driver):
         except ValueError:
             sys.exit(self.error_msg)
 
-        if len(arglist) == 5:
+        if len(arglist) == 6:
             self.model = arglist[0]
             self.template = arglist[1]
             self.xdos = arglist[2]
             self.temperature = arglist[3]
-            self.nelectrons = arglist[4] 
+            self.nelectrons = arglist[4]
+            self.contribution = arglist[5]
         else:
             sys.exit(self.error_msg)
 
-        self.base_calc = RascalCalc(self.model, True, self.xdos, self.temperature, self.template, self.nelectrons)
+        self.base_calc = RascalCalc(self.model, True, self.xdos, self.temperature, self.template, self.nelectrons, contribution=self.contribution)
 
     def __call__(self, cell, pos):
         """Get energies, forces, and stresses from the librascal model"""
