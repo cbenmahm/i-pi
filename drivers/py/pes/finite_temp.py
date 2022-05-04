@@ -61,5 +61,4 @@ class Finite_T_driver(Dummy_driver):
         # The rascal stress is normalized by the cell volume (in rascal units)
         vir_rascal = -1 * stress * det_ut3x3(cell_rascal)
         vir_ipi = unit_to_internal("energy", "electronvolt", vir_rascal)
-        extras = ""
         return pot_ipi, force_ipi, vir_ipi, extras
